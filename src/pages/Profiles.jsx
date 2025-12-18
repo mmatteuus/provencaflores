@@ -3,7 +3,7 @@ import { useState } from 'react'
 import AdminProfile from '@/components/AdminProfile'
 import { AdminDashboard } from '@/components/AdminDashboard'
 import { AdminPermissions } from '@/components/AdminPermissions'
-import { Role } from '@/types/roles'
+import { Role, Permission } from '@/types/roles'
 import { useAuthorization } from '@/hooks/useAuthorization'
 
 const profileTypes = [
@@ -63,7 +63,7 @@ const managerAdminTemplate = {
 export default function Profiles() {
   const [managerPanelOpen, setManagerPanelOpen] = useState(false)
   const [managerPermissions, setManagerPermissions] = useState(managerAdminTemplate.permissions)
-  const managerAuthorization = useAuthorization([Role.ADMIN])
+  const managerAuthorization = useAuthorization(Role.ADMIN)
 
   const togglePermission = (permissionKey) => {
     setManagerPermissions((prev) => ({
@@ -134,30 +134,19 @@ export default function Profiles() {
           <div className="bg-white rounded-3xl shadow p-6 space-y-4">
             <h3 className="text-lg font-semibold text-slate-900">Resumo de acesso</h3>
             <div className="grid sm:grid-cols-2 gap-4 text-sm text-slate-600">
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Dashboard</p>
-                <p>{managerAuthorization.canViewDashboard ? 'acessível' : 'bloqueado'}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Produtos</p>
-                <p>{managerAuthorization.canManageProducts ? 'acessível' : 'bloqueado'}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Pedidos</p>
-                <p>{managerAuthorization.canManageOrders ? 'acessível' : 'bloqueado'}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Analytics</p>
-                <p>{managerAuthorization.canViewAnalytics ? 'acessível' : 'bloqueado'}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Promoções</p>
-                <p>{managerAuthorization.canManagePromotions ? 'acessível' : 'bloqueado'}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-semibold text-slate-800">Clientes</p>
-                <p>{managerAuthorization.canManageCustomers ? 'acessível' : 'bloqueado'}</p>
-              </div>
+              {[
+                { label: 'Dashboard', permission: Permission.VIEW_DASHBOARD },
+                { label: 'Produtos', permission: Permission.MANAGE_PRODUCTS },
+                { label: 'Pedidos', permission: Permission.MANAGE_ORDERS },
+                { label: 'Analytics', permission: Permission.VIEW_ANALYTICS },
+                { label: 'Promoções', permission: Permission.MANAGE_PROMOTIONS },
+                { label: 'Clientes', permission: Permission.MANAGE_CUSTOMERS },
+              ].map(({ label, permission }) => (
+                <div className="space-y-1" key={label}>
+                  <p className="font-semibold text-slate-800">{label}</p>
+                  <p>{managerAuthorization.can(permission) ? 'acessível' : 'bloqueado'}</p>
+                </div>
+              ))}
             </div>
           </div>
           <AdminPermissions permissions={managerPermissions} onToggle={togglePermission} />
