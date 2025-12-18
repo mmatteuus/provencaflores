@@ -3,12 +3,14 @@ import { useState } from 'react'
 import AdminProfile from '@/components/AdminProfile'
 import { AdminDashboard } from '@/components/AdminDashboard'
 import { AdminPermissions } from '@/components/AdminPermissions'
+import { Role } from '@/types/roles'
+import { useAuthorization } from '@/hooks/useAuthorization'
 
 const profileTypes = [
   {
     id: 'gente',
     name: 'Perfil de Gente',
-    description: 'Equipe de pessoas cuidando do time: treinamentos, cultura e comunicação interna.',
+    description: 'Equipe que cuida das pessoas, treinamento, cultura e comunicação interna.',
     highlights: ['Painel com indicadores de pessoas', 'Programas de reconhecimento', 'Acesso às campanhas internas'],
   },
   {
@@ -61,11 +63,12 @@ const managerAdminTemplate = {
 export default function Profiles() {
   const [managerPanelOpen, setManagerPanelOpen] = useState(false)
   const [managerPermissions, setManagerPermissions] = useState(managerAdminTemplate.permissions)
+  const managerAuthorization = useAuthorization([Role.ADMIN])
 
-  const handleTogglePermission = (permission) => {
-    setManagerPermissions((current) => ({
-      ...current,
-      [permission]: !current[permission],
+  const togglePermission = (permissionKey) => {
+    setManagerPermissions((prev) => ({
+      ...prev,
+      [permissionKey]: !prev[permissionKey],
     }))
   }
 
@@ -128,7 +131,36 @@ export default function Profiles() {
             }}
           />
           <AdminDashboard stats={managerAdminTemplate.stats} />
-          <AdminPermissions permissions={managerPermissions} onToggle={handleTogglePermission} />
+          <div className="bg-white rounded-3xl shadow p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900">Resumo de acesso</h3>
+            <div className="grid sm:grid-cols-2 gap-4 text-sm text-slate-600">
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Dashboard</p>
+                <p>{managerAuthorization.canViewDashboard ? 'acessível' : 'bloqueado'}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Produtos</p>
+                <p>{managerAuthorization.canManageProducts ? 'acessível' : 'bloqueado'}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Pedidos</p>
+                <p>{managerAuthorization.canManageOrders ? 'acessível' : 'bloqueado'}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Analytics</p>
+                <p>{managerAuthorization.canViewAnalytics ? 'acessível' : 'bloqueado'}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Promoções</p>
+                <p>{managerAuthorization.canManagePromotions ? 'acessível' : 'bloqueado'}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="font-semibold text-slate-800">Clientes</p>
+                <p>{managerAuthorization.canManageCustomers ? 'acessível' : 'bloqueado'}</p>
+              </div>
+            </div>
+          </div>
+          <AdminPermissions permissions={managerPermissions} onToggle={togglePermission} />
         </section>
       )}
 
