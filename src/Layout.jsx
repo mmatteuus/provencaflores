@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { createPageUrl } from '@/utils'
+import { Settings } from 'lucide-react'
 
 const navItems = [
   { label: 'Início', to: '/' },
@@ -40,16 +41,27 @@ export default function Layout({ children }) {
               ))}
             </nav>
 
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden rounded-lg p-2 border border-purple-100 text-purple-600 hover:bg-purple-50 transition"
-            >
-              <span className="sr-only">Abrir menu</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-3">
+              <Link
+                to={createPageUrl('Profiles')}
+                className="hidden md:inline-flex items-center justify-center h-10 w-10 rounded-full bg-purple-50 text-purple-600 border border-purple-100 hover:bg-purple-100 transition"
+                aria-label="Perfis disponíveis"
+              >
+                <Settings className="h-5 w-5" />
+              </Link>
+
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="md:hidden rounded-lg p-2 border border-purple-100 text-purple-600 hover:bg-purple-50 transition"
+              >
+                <span className="sr-only">Abrir menu</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
           </div>
+
           {mobileOpen && (
             <div className="md:hidden py-4 space-y-2">
               {navItems.map((item) => (
@@ -67,9 +79,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="pt-8">
-        {children}
-      </main>
+      <main className="pt-8">{children}</main>
 
       <footer className="mt-16 bg-purple-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid md:grid-cols-3 gap-8">

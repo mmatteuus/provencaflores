@@ -9,6 +9,7 @@ import Contact from '@/pages/Contact'
 import Cart from '@/pages/Cart'
 import Checkout from '@/pages/Checkout'
 import OrderConfirmation from '@/pages/OrderConfirmation'
+import Profiles from '@/pages/Profiles'
 import PageNotFound from '@/lib/PageNotFound'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/profiles" element={<Profiles />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Layout>
