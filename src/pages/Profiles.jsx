@@ -1,3 +1,9 @@
+import { useState } from 'react'
+
+import AdminProfile from '@/components/AdminProfile'
+import { AdminDashboard } from '@/components/AdminDashboard'
+import { AdminPermissions } from '@/components/AdminPermissions'
+
 const profileTypes = [
   {
     id: 'gente',
@@ -29,7 +35,40 @@ const profileTypes = [
   },
 ]
 
+const managerAdminTemplate = {
+  id: 'gerente-1',
+  name: 'Marina Andrade',
+  email: 'marina.andrade@provencaflores.com.br',
+  avatarUrl: 'https://i.pravatar.cc/150?img=47',
+  roles: ['gerente', 'admin'],
+  lastLogin: '2025-12-02T15:30:00Z',
+  permissions: {
+    viewDashboard: true,
+    manageProducts: true,
+    manageOrders: true,
+    viewAnalytics: true,
+    manageTvSlides: true,
+    editSettings: true,
+    manageCustomers: true,
+    managePromotions: true,
+  },
+  stats: {
+    activeUsers: 1284,
+    systemAlerts: 2,
+  },
+}
+
 export default function Profiles() {
+  const [managerPanelOpen, setManagerPanelOpen] = useState(false)
+  const [managerPermissions, setManagerPermissions] = useState(managerAdminTemplate.permissions)
+
+  const handleTogglePermission = (permission) => {
+    setManagerPermissions((current) => ({
+      ...current,
+      [permission]: !current[permission],
+    }))
+  }
+
   return (
     <div className="min-h-[80vh] max-w-5xl mx-auto px-4 py-12 space-y-10">
       <header className="space-y-2 text-center">
@@ -39,39 +78,60 @@ export default function Profiles() {
           Cada perfil recebe atendimento dedicado, coleções e benefícios específicos sem necessidade de login. Clique no botão desejado e saiba mais.
         </p>
       </header>
-          <div className="grid sm:grid-cols-2 gap-6">
-            {profileTypes.map((profile) => (
-              <div key={profile.id} className="flex flex-col rounded-3xl shadow-lg bg-white p-6 gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.5em] text-purple-400">{profile.id}</p>
-                  <h2 className="text-2xl font-semibold text-slate-900">{profile.name}</h2>
-                </div>
-                <p className="text-sm text-slate-500 flex-1">{profile.description}</p>
-                <div className="space-y-2">
-                  {profile.highlights?.map((item) => (
-                    <p key={item} className="text-xs text-slate-500">
-                      • {item}
-                    </p>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <a
-                    href={`#${profile.id}`}
-                    className="px-5 py-3 rounded-full border border-purple-200 text-sm font-semibold text-purple-600 hover:bg-purple-50 transition"
-                  >
-                    Ver benefícios
-                  </a>
+
+      <div className="grid sm:grid-cols-2 gap-6">
+        {profileTypes.map((profile) => (
+          <div key={profile.id} className="flex flex-col rounded-3xl shadow-lg bg-white p-6 gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.5em] text-purple-400">{profile.id}</p>
+              <h2 className="text-2xl font-semibold text-slate-900">{profile.name}</h2>
+            </div>
+            <p className="text-sm text-slate-500 flex-1">{profile.description}</p>
+            <div className="space-y-2">
+              {profile.highlights?.map((item) => (
+                <p key={item} className="text-xs text-slate-500">
+                  • {item}
+                </p>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={`#${profile.id}`}
+                className="px-5 py-3 rounded-full border border-purple-200 text-sm font-semibold text-purple-600 hover:bg-purple-50 transition"
+              >
+                Ver benefícios
+              </a>
               <button
                 type="button"
-                onClick={() => alert(`${profile.name} selecionado`)}
+                onClick={() => {
+                  if (profile.id === 'gerente') {
+                    setManagerPanelOpen((prev) => !prev)
+                  } else {
+                    alert(`${profile.name} selecionado`)
+                  }
+                }}
                 className="px-5 py-3 rounded-full bg-purple-600 text-white text-sm font-semibold hover:bg-purple-500 transition"
               >
-                Entrar em contato
+                {profile.id === 'gerente' ? (managerPanelOpen ? 'Fechar painel' : 'Abrir painel de gerente') : 'Entrar em contato'}
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {managerPanelOpen && (
+        <section className="space-y-6" id="gerente">
+          <AdminProfile
+            admin={{
+              ...managerAdminTemplate,
+              permissions: managerPermissions,
+            }}
+          />
+          <AdminDashboard stats={managerAdminTemplate.stats} />
+          <AdminPermissions permissions={managerPermissions} onToggle={handleTogglePermission} />
+        </section>
+      )}
+
       <div className="bg-purple-50 rounded-3xl shadow-inner p-8 space-y-4">
         <h3 className="text-xl font-semibold text-purple-700">Precisa de ajuda?</h3>
         <p className="text-sm text-purple-600">
