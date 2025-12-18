@@ -1,23 +1,31 @@
 const profileTypes = [
   {
+    id: 'gente',
+    name: 'Perfil de Gente',
+    description: 'Equipe de pessoas cuidando do time: treinamentos, cultura e comunicação interna.',
+    highlights: ['Painel com indicadores de pessoas', 'Programas de reconhecimento', 'Acesso às campanhas internas'],
+  },
+  {
+    id: 'vendedor-caixa',
+    name: 'Vendedor/Caixa',
+    description: 'Operadores do balcão que atendem o cliente final, fecham vendas e gerenciam trocas.',
+    highlights: ['Acesso rápido ao catálogo e estoque', 'Registro de pagamentos e trocas', 'Resumo diário de vendas'],
+  },
+  {
     id: 'cliente',
     name: 'Cliente',
-    description: 'Compras únicas, assinaturas mensais ou presentes personalizados.',
+    description: 'Público final que visita a loja virtual, visualiza catálogos e finaliza pedidos.',
+    highlights: ['Catálogo completo e filtros', 'Perfil de assinaturas e favoritos', 'Checkout guiado sem login obrigatório'],
   },
   {
-    id: 'corporativo',
-    name: 'Corporativo',
-    description: 'Assinaturas para recepções, ambientações e eventos corporativos.',
-  },
-  {
-    id: 'revendedor',
-    name: 'Revendedor',
-    description: 'Parceria para revender produtos Provença em sua loja física ou online.',
-  },
-  {
-    id: 'designer',
-    name: 'Designer de interiores',
-    description: 'Projetos conjuntos para ambientação de residências e espaços comerciais.',
+    id: 'gerente',
+    name: 'Gerente',
+    description: 'Visão completa da operação, com todas as áreas da loja sob controle.',
+    highlights: [
+      'Dashboard • Products • Orders • Analytics',
+      'TvSlides • Settings • Customers • Promotions',
+      'Controle total sem necessidade de login adicional',
+    ],
   },
 ]
 
@@ -31,21 +39,28 @@ export default function Profiles() {
           Cada perfil recebe atendimento dedicado, coleções e benefícios específicos sem necessidade de login. Clique no botão desejado e saiba mais.
         </p>
       </header>
-      <div className="grid sm:grid-cols-2 gap-6">
-        {profileTypes.map((profile) => (
-          <div key={profile.id} className="flex flex-col rounded-3xl shadow-lg bg-white p-6 gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.5em] text-purple-400">{profile.id}</p>
-              <h2 className="text-2xl font-semibold text-slate-900">{profile.name}</h2>
-            </div>
-            <p className="text-sm text-slate-500 flex-1">{profile.description}</p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={`#${profile.id}`}
-                className="px-5 py-3 rounded-full border border-purple-200 text-sm font-semibold text-purple-600 hover:bg-purple-50 transition"
-              >
-                Ver benefícios
-              </a>
+          <div className="grid sm:grid-cols-2 gap-6">
+            {profileTypes.map((profile) => (
+              <div key={profile.id} className="flex flex-col rounded-3xl shadow-lg bg-white p-6 gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.5em] text-purple-400">{profile.id}</p>
+                  <h2 className="text-2xl font-semibold text-slate-900">{profile.name}</h2>
+                </div>
+                <p className="text-sm text-slate-500 flex-1">{profile.description}</p>
+                <div className="space-y-2">
+                  {profile.highlights?.map((item) => (
+                    <p key={item} className="text-xs text-slate-500">
+                      • {item}
+                    </p>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href={`#${profile.id}`}
+                    className="px-5 py-3 rounded-full border border-purple-200 text-sm font-semibold text-purple-600 hover:bg-purple-50 transition"
+                  >
+                    Ver benefícios
+                  </a>
               <button
                 type="button"
                 onClick={() => alert(`${profile.name} selecionado`)}
