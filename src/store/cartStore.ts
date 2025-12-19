@@ -40,6 +40,14 @@ type CartStore = CartState & {
 
 const STORAGE_KEY = 'pf_cart_v1'
 
+function getStorage() {
+  try {
+    return typeof window !== 'undefined' ? window.localStorage : null
+  } catch {
+    return null
+  }
+}
+
 function safeJsonParse<T>(value: string | null): T | null {
   if (!value) return null
   try {
@@ -58,10 +66,11 @@ function createLineId() {
 
 const listeners = new Set<() => void>()
 
-let state: CartState = loadInitialState()
+let state: CartState = loadInitialStateSafe()
 
-function loadInitialState(): CartState {
-  const parsed = safeJsonParse<CartState>(localStorage.getItem(STORAGE_KEY))
+function loadInitialStateSafe(): CartState {
+  const storage = getStorage()
+  const parsed = safeJsonParse<CartState>(storage?.getItem(STORAGE_KEY) ?? null)
   if (!parsed?.lines || !Array.isArray(parsed.lines)) return { lines: [] }
   return {
     lines: parsed.lines.filter((line) => line && typeof line.lineId === 'string' && typeof line.productId === 'string'),
@@ -70,44 +79,61 @@ function loadInitialState(): CartState {
 
 function persist(next: CartState) {
   state = next
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  const storage = getStorage()
+  try {
+    storage?.setItem(STORAGE_KEY, JSON.stringify(state))
+  } catch {
+    // ignore
+  }
   listeners.forEach((listener) => listener())
 }
 
-export function cartStoreGetState(): CartStore {
-  return {
-    ...state,
-    addItem(input) {
-      const qty = Math.max(1, Math.floor(input.qty ?? 1))
-      const normalizedAddons = (input.addons ?? []).filter((addon) => addon && addon.qty > 0)
-      const nextLine: CartLine = {
-        lineId: createLineId(),
-        productId: input.productId,
-        variantId: input.variantId ?? null,
-        addons: normalizedAddons,
-        message: input.message ?? '',
-        deliveryDate: input.deliveryDate ?? null,
-        deliveryWindow: input.deliveryWindow ?? null,
-        qty,
-        addedAt: new Date().toISOString(),
-      }
-
-      persist({ lines: [nextLine, ...state.lines] })
-      return nextLine.lineId
-    },
-    removeItem(lineId) {
-      persist({ lines: state.lines.filter((line) => line.lineId !== lineId) })
-    },
-    updateQty(lineId, qty) {
-      const normalizedQty = Math.max(1, Math.floor(qty))
-      persist({
-        lines: state.lines.map((line) => (line.lineId === lineId ? { ...line, qty: normalizedQty } : line)),
-      })
-    },
-    clear() {
-      persist({ lines: [] })
-    },
+function addItem(input: {
+  productId: string
+  variantId?: string | null
+  addons?: CartAddonSelection[]
+  message?: string
+  deliveryDate?: string | null
+  deliveryWindow?: DeliveryWindow | null
+  qty?: number
+}): string {
+  const qty = Math.max(1, Math.floor(input.qty ?? 1))
+  const normalizedAddons = (input.addons ?? []).filter((addon) => addon && addon.qty > 0)
+  const nextLine: CartLine = {
+    lineId: createLineId(),
+    productId: input.productId,
+    variantId: input.variantId ?? null,
+    addons: normalizedAddons,
+    message: input.message ?? '',
+    deliveryDate: input.deliveryDate ?? null,
+    deliveryWindow: input.deliveryWindow ?? null,
+    qty,
+    addedAt: new Date().toISOString(),
   }
+
+  persist({ lines: [nextLine, ...state.lines] })
+  return nextLine.lineId
+}
+
+function removeItem(lineId: string) {
+  persist({ lines: state.lines.filter((line) => line.lineId !== lineId) })
+}
+
+function updateQty(lineId: string, qty: number) {
+  const normalizedQty = Math.max(1, Math.floor(qty))
+  persist({
+    lines: state.lines.map((line) => (line.lineId === lineId ? { ...line, qty: normalizedQty } : line)),
+  })
+}
+
+function clear() {
+  persist({ lines: [] })
+}
+
+const actions = { addItem, removeItem, updateQty, clear } as const
+
+export function cartStoreGetState(): CartStore {
+  return { ...state, ...actions }
 }
 
 export function cartStoreSubscribe(listener: () => void) {
@@ -116,6 +142,5 @@ export function cartStoreSubscribe(listener: () => void) {
 }
 
 export function useCartStore<T>(selector: (s: CartStore) => T): T {
-  return useSyncExternalStore(cartStoreSubscribe, () => selector(cartStoreGetState()))
+  return useSyncExternalStore(cartStoreSubscribe, () => selector(cartStoreGetState()), () => selector(cartStoreGetState()))
 }
-

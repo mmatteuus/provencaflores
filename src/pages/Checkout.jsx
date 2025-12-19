@@ -5,6 +5,7 @@ import { ARAGUAINA_RATES, DELIVERY_WINDOWS, estimateAraguainaShippingBRL, getDef
 import { findAddonById, findProductById } from '@/data/mockData'
 import { toast } from '@/components/ui/use-toast'
 import { useCartStore } from '@/store/cartStore'
+import { useCustomerStore } from '@/store/customerStore'
 import { useLoyaltyStore } from '@/store/loyaltyStore'
 import { saveOrder } from '@/store/orderStore'
 import { paymentProvider } from '@/payments/provider'
@@ -38,16 +39,23 @@ export default function Checkout() {
   const earnPoints = useLoyaltyStore((s) => s.earnPoints)
   const redeem = useLoyaltyStore((s) => s.redeem)
 
+  const customerProfile = useCustomerStore((s) => s.profile)
+  const setCustomerProfile = useCustomerStore((s) => s.setProfile)
+
   const enriched = useMemo(() => lines.map((line) => ({ line, ...getLinePricing(line) })), [lines])
   const subtotal = useMemo(() => enriched.reduce((sum, item) => sum + item.lineTotal, 0), [enriched])
 
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  const [customer, setCustomer] = useState({ name: '', email: '', phone: '' })
+  const [customer, setCustomer] = useState(() => ({
+    name: customerProfile.name ?? '',
+    email: customerProfile.email ?? '',
+    phone: customerProfile.phone ?? '',
+  }))
   const [delivery, setDelivery] = useState({
-    address: '',
-    neighborhood: 'Centro',
+    address: customerProfile.address ?? '',
+    neighborhood: customerProfile.neighborhood ?? 'Centro',
     notes: '',
     deliveryDate: lines[0]?.deliveryDate ?? getDefaultDeliveryDateISO({ sameDayEligible: true }),
     deliveryWindow: lines[0]?.deliveryWindow ?? DELIVERY_WINDOWS[1].id,
@@ -138,6 +146,14 @@ export default function Checkout() {
       })
 
       clearCart()
+
+      setCustomerProfile({
+        name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+        address: delivery.address,
+        neighborhood: delivery.neighborhood,
+      })
 
       toast({ title: 'Pedido criado', description: `Pedido ${order.id}` })
 

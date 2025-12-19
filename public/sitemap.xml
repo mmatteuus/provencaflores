@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>http://localhost:5173/</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/catalog</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/about</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/contact</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/cart</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/checkout</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/minha-conta</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/rosa-unitaria</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/ramalhete-de-rosas</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/buque-delicadeza</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/girassois-com-folhagem</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/orquidea-phalaenopsis</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
-  <url><loc>http://localhost:5173/product/cesta-cafe-da-manha</loc><lastmod>2025-12-19T20:26:06.793Z</lastmod></url>
+  <url><loc>http://localhost:5173/</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/catalog</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/about</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/contact</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/cart</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/checkout</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/minha-conta</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/rosa-unitaria</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/ramalhete-de-rosas</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/buque-delicadeza</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/girassois-com-folhagem</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/orquidea-phalaenopsis</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
+  <url><loc>http://localhost:5173/product/cesta-cafe-da-manha</loc><lastmod>2025-12-19T21:16:32.831Z</lastmod></url>
 </urlset>
