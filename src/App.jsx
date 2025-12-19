@@ -9,7 +9,7 @@ import Contact from '@/pages/Contact'
 import Cart from '@/pages/Cart'
 import Checkout from '@/pages/Checkout'
 import OrderConfirmation from '@/pages/OrderConfirmation'
-import Profiles from '@/pages/Profiles'
+import MyAccount from '@/pages/MyAccount'
 import PageNotFound from '@/lib/PageNotFound'
 import { Toaster } from '@/components/ui/toaster'
 
@@ -25,8 +25,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-confirmation" element={<OrderConfirmation />} />
-          <Route path="/profiles" element={<Profiles />} />
+          <Route path="/pedido/:orderId" element={<OrderConfirmation />} />
+          <Route path="/minha-conta" element={<MyAccount />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Layout>
@@ -36,3 +36,4 @@ function App() {
 }
 
 export default App
+
