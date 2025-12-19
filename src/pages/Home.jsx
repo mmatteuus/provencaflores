@@ -27,14 +27,25 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {products.slice(0, 4).map((product) => (
-              <div key={product.id} className="rounded-2xl overflow-hidden shadow-xl bg-white text-slate-800">
-                <img src={product.images?.[0]} alt={product.name} loading="lazy" decoding="async" className="h-40 w-full object-cover" />
+              <Link
+                key={product.id}
+                to={`/product/${product.slug}`}
+                className="group block rounded-2xl overflow-hidden shadow-xl bg-white text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                aria-label={`Ver ${product.name}`}
+              >
+                <img
+                  src={product.images?.[0]}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-40 w-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                />
                 <div className="p-4 space-y-1">
                   <p className="text-xs uppercase tracking-wide text-purple-500">{product.category}</p>
                   <h3 className="font-semibold">{product.name}</h3>
                   <p className="text-sm text-slate-500">A partir de {formatBRL(product.priceFrom)}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -52,22 +63,33 @@ export default function Home() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredProducts.map((product) => (
-            <article key={product.id} className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col">
-              <div className="h-56 w-full overflow-hidden">
-                <img src={product.images?.[0]} alt={product.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <span className="text-xs uppercase tracking-[0.4em] text-purple-400">{product.category}</span>
-                <h3 className="text-2xl font-semibold text-slate-900 mt-2">{product.name}</h3>
-                <p className="text-sm text-slate-500 mt-2 flex-1">{product.description}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <p className="text-lg font-bold text-purple-600">{formatBRL(product.priceFrom)}</p>
-                  <Link to={`/product/${product.slug}`} className="text-sm font-semibold text-purple-600 hover:underline">
-                    Ver detalhes
-                  </Link>
+            <Link
+              key={product.id}
+              to={`/product/${product.slug}`}
+              className="group block bg-white rounded-2xl shadow-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+              aria-label={`Ver ${product.name}`}
+            >
+              <article className="flex flex-col h-full">
+                <div className="h-56 w-full overflow-hidden">
+                  <img
+                    src={product.images?.[0]}
+                    alt={product.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  />
                 </div>
-              </div>
-            </article>
+                <div className="p-6 flex-1 flex flex-col">
+                  <span className="text-xs uppercase tracking-[0.4em] text-purple-400">{product.category}</span>
+                  <h3 className="text-2xl font-semibold text-slate-900 mt-2">{product.name}</h3>
+                  <p className="text-sm text-slate-500 mt-2 flex-1">{product.description}</p>
+                  <div className="mt-4 flex items-center justify-between">
+                    <p className="text-lg font-bold text-purple-600">{formatBRL(product.priceFrom)}</p>
+                    <span className="text-sm font-semibold text-purple-600 group-hover:underline">Ver detalhes</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
       </section>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { addonsCatalog, findProductBySlug } from '@/data/mockData'
+import { addonsCatalog, findProductBySlug, products } from '@/data/mockData'
 import { toast } from '@/components/ui/use-toast'
 import { useCartStore } from '@/store/cartStore'
 import DeliveryScheduler from '@/components/DeliveryScheduler'
@@ -26,6 +26,27 @@ export default function ProductDetail() {
   const addonOptions = useMemo(() => {
     if (!product) return []
     return addonsCatalog.filter((addon) => product.addons.includes(addon.id))
+  }, [product])
+
+  const suggestedProducts = useMemo(() => {
+    if (!product) return []
+
+    const others = products.filter((p) => p.id !== product.id)
+    const sameCategory = others.filter((p) => p.category === product.category)
+    const complementary = others.filter((p) => p.category !== product.category)
+
+    const sorted = (list) =>
+      list
+        .slice()
+        .sort((a, b) => {
+          const featured = Number(b.featured) - Number(a.featured)
+          if (featured !== 0) return featured
+          const today = Number(Boolean(b.delivery?.sameDayEligible)) - Number(Boolean(a.delivery?.sameDayEligible))
+          if (today !== 0) return today
+          return a.priceFrom - b.priceFrom
+        })
+
+    return [...sorted(sameCategory).slice(0, 2), ...sorted(complementary).slice(0, 2)].slice(0, 4)
   }, [product])
 
   const selectedVariant = useMemo(() => {
@@ -249,6 +270,49 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {suggestedProducts.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm uppercase tracking-[0.4em] text-purple-500">Sugestões</p>
+              <h2 className="text-2xl font-semibold text-slate-900">Para acompanhar sua escolha</h2>
+              <p className="text-sm text-slate-500">Ideias para complementar o presente (flor + acompanhamento).</p>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {suggestedProducts.map((p) => (
+              <Link
+                key={p.id}
+                to={`/product/${p.slug}`}
+                className="group block bg-white rounded-2xl shadow-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                aria-label={`Ver ${p.name}`}
+              >
+                <div className="relative h-36">
+                  <img
+                    src={p.images?.[0]}
+                    alt={p.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                  {p.delivery?.sameDayEligible && (
+                    <span className="absolute top-3 left-3 px-2 py-1 text-[10px] font-semibold bg-emerald-600 text-white rounded-full shadow">
+                      Entrega hoje
+                    </span>
+                  )}
+                </div>
+                <div className="p-4 space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.35em] text-purple-500">{p.category}</p>
+                  <p className="font-semibold text-slate-900 leading-snug">{p.name}</p>
+                  <p className="text-sm font-bold text-purple-700">A partir de {formatBRL(p.priceFrom)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -107,43 +107,48 @@ export default function Catalog() {
 
       <div className="grid md:grid-cols-2 gap-6">
         {filteredProducts.map((product) => (
-          <article key={product.id} className="bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col">
-            <div className="relative h-56">
-              <img
-                src={product.images?.[0]}
-                alt={product.name}
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover"
-              />
-              {product.delivery?.sameDayEligible && (
-                <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold bg-emerald-600 text-white rounded-full shadow-lg">
-                  Entrega hoje
-                </span>
-              )}
-              {product.featured && (
-                <span className="absolute top-4 right-4 px-3 py-1 text-xs font-semibold bg-purple-600 text-white rounded-full shadow-lg">
-                  Destaque
-                </span>
-              )}
-            </div>
-            <div className="p-6 flex flex-col gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.4em] text-purple-500">{product.category}</p>
-                <h2 className="text-2xl font-semibold text-slate-900 mt-1">{product.name}</h2>
+          <Link
+            key={product.id}
+            to={`/product/${product.slug}`}
+            className="group block bg-white rounded-3xl shadow-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+            aria-label={`Ver ${product.name}`}
+          >
+            <article className="flex flex-col h-full">
+              <div className="relative h-56">
+                <img
+                  src={product.images?.[0]}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                />
+                {product.delivery?.sameDayEligible && (
+                  <span className="absolute top-4 left-4 px-3 py-1 text-xs font-semibold bg-emerald-600 text-white rounded-full shadow-lg">
+                    Entrega hoje
+                  </span>
+                )}
+                {product.featured && (
+                  <span className="absolute top-4 right-4 px-3 py-1 text-xs font-semibold bg-purple-600 text-white rounded-full shadow-lg">
+                    Destaque
+                  </span>
+                )}
               </div>
-              <p className="text-slate-500">{product.description}</p>
-              <div className="flex items-center justify-between">
+              <div className="p-6 flex flex-col gap-3 flex-1">
                 <div>
-                  <p className="text-lg font-bold text-purple-600">{formatBRL(product.priceFrom)}</p>
-                  <p className="text-xs text-slate-400">{product.variants.length} variações · + complementos</p>
+                  <p className="text-xs uppercase tracking-[0.4em] text-purple-500">{product.category}</p>
+                  <h2 className="text-2xl font-semibold text-slate-900 mt-1">{product.name}</h2>
                 </div>
-                <Link to={`/product/${product.slug}`} className="text-sm font-semibold text-purple-600 hover:underline">
-                  Ver produto
-                </Link>
+                <p className="text-slate-500">{product.description}</p>
+                <div className="flex items-center justify-between mt-auto">
+                  <div>
+                    <p className="text-lg font-bold text-purple-600">{formatBRL(product.priceFrom)}</p>
+                    <p className="text-xs text-slate-400">{product.variants.length} variações · + complementos</p>
+                  </div>
+                  <span className="text-sm font-semibold text-purple-600 group-hover:underline">Ver produto</span>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </Link>
         ))}
       </div>
     </div>
